@@ -6,7 +6,7 @@ use std::net::SocketAddr;
 use clap::{Arg, Command};
 
 const MAX_RECENT_PACKETS: usize = 10;
-const ROLLING_WINDOW: usize = 300; // 10 intervals for sliding window
+const ROLLING_WINDOW: usize = 300; // 300 intervals for sliding window
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -183,6 +183,10 @@ async fn display_statistics(
         packets_in_last_interval = 0;
         bytes_in_last_interval = 0;
 
+        // Format the total bytes and sliding byte rate
+        let formatted_total_bytes = format_bytes(total_bytes as f64);
+        let formatted_byte_rate = format_bytes(avg_byte_rate);
+
         // Fetch terminal size and adjust display
         let (cols, _) = terminal::size().unwrap_or((80, 20));
         let max_data_width = (cols as usize).saturating_sub(30);
@@ -196,12 +200,17 @@ async fn display_statistics(
             "Relay Statistics:\n\
             ----------------\n\
             Total Packets Forwarded: {}\n\
-            Total Bytes Forwarded: {}\n\
+            Total Bytes Forwarded: {} {}\n\
             Sliding Packet Rate: {:>8.2} packets/sec\n\
-            Sliding Byte Rate: {:>8.2} bytes/sec\n\
+            Sliding Byte Rate: {:>8} {}/sec\n\
             Receive Buffer Size: {:>8}\n\
             \nLast {} Packets:\n",
-            total_packets, total_bytes, avg_packet_rate, avg_byte_rate, receive_buffer_size, MAX_RECENT_PACKETS
+            format_number(total_packets),
+            formatted_total_bytes.0, formatted_total_bytes.1,
+            avg_packet_rate,
+            formatted_byte_rate.0, formatted_byte_rate.1,
+            receive_buffer_size,
+            MAX_RECENT_PACKETS
         ) {
             eprintln!("Failed to write to terminal: {}", e);
         }
@@ -222,5 +231,40 @@ async fn display_statistics(
         if let Err(e) = stdout.flush() {
             eprintln!("Failed to flush terminal: {}", e);
         }
+    }
+}
+
+// Formats a large number with comma separators
+fn format_number(n: u64) -> String {
+    let mut s = n.to_string();
+    let mut result = String::new();
+
+    while s.len() > 3 {
+        let len = s.len();
+        result = format!(",{}{}", &s[len - 3..], result);
+        s.truncate(len - 3);
+    }
+    result = format!("{}{}", s, result);
+
+    result
+}
+
+// Converts bytes to a human-readable format and returns the value and unit
+fn format_bytes(bytes: f64) -> (String, &'static str) {
+    const KB: f64 = 1024.0;
+    const MB: f64 = KB * 1024.0;
+    const GB: f64 = MB * 1024.0;
+    const TB: f64 = GB * 1024.0;
+
+    if bytes >= TB {
+        (format!("{:.2}", bytes / TB), "TB")
+    } else if bytes >= GB {
+        (format!("{:.2}", bytes / GB), "GB")
+    } else if bytes >= MB {
+        (format!("{:.2}", bytes / MB), "MB")
+    } else if bytes >= KB {
+        (format!("{:.2}", bytes / KB), "KB")
+    } else {
+        (format!("{:.2}", bytes), "B")
     }
 }
