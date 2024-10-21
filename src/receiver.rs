@@ -68,7 +68,7 @@ async fn main() -> std::io::Result<()> {
     tokio::spawn(async move {
         let mut buf = vec![0u8; buffer_size];
         loop {
-            let mut socket = socket_clone.lock().await;
+            let socket = socket_clone.lock().await;
             match socket.recv_from(&mut buf).await {
                 Ok((len, _src_addr)) => {
                     if tx.send(buf[..len].to_vec()).await.is_err() {
