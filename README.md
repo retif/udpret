@@ -13,7 +13,7 @@ Options:
   -h, --help               Print help
   -V, --version            Print version
 
-```bash
+
 $ ./sender --help
 Asynchronous UDP sender
 
@@ -29,7 +29,7 @@ Options:
   -h, --help                   Print help
   -V, --version                Print version
 
-```bash
+
 $ ./receiver --help
 Asynchronous UDP receiver
 
