@@ -2,7 +2,7 @@
 
 ```bash
 $ ./relay --help
-Asynchronous UDP relay with adjustable frame rate
+Asynchronous UDP relay
 
 Usage: relay [OPTIONS] --listen <IP:PORT> --forward <IP:PORT>
 
@@ -15,7 +15,7 @@ Options:
 
 ```bash
 $ ./sender --help
-Asynchronous UDP sender with enhanced features
+Asynchronous UDP sender
 
 Usage: sender [OPTIONS] --destination <IP:PORT>
 
@@ -31,7 +31,7 @@ Options:
 
 ```bash
 $ ./receiver --help
-Asynchronous UDP receiver with enhanced features
+Asynchronous UDP receiver
 
 Usage: receiver [OPTIONS] --listen <IP:PORT>
 
