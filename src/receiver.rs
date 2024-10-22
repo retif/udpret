@@ -6,7 +6,6 @@ use std::io::{stdout, Write};
 use clap::{Arg, Command};
 use std::sync::Arc;
 
-const BATCH_SIZE: usize = 10; // Number of packets processed per batch
 const MAX_RECENT_PACKETS: usize = 10; // Maximum number of recent packets to display
 const CHANNEL_BUFFER_SIZE: usize = 100; // Buffer size for the channel
 

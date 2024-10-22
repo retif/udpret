@@ -6,11 +6,6 @@ use std::net::SocketAddr; // Import SocketAddr
 use clap::{Arg, Command};
 use rand::Rng;
 
-const DEFAULT_RETRY_COUNT: usize = 3;
-const DEFAULT_RETRY_DELAY_MS: u64 = 100;
-const MAX_RECENT_PACKETS: usize = 10;
-const DEFAULT_WINDOW_SIZE: usize = 10; // Default sliding window size
-
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
     // Define command-line arguments using clap

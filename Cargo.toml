@@ -7,13 +7,8 @@ edition = "2021"
 clap = "4.5.20"
 crossterm = "0.28.1"
 rand = "0.8.5"
-relayport-rs = "0.5.0"
 rust-raknet = "0.12.0"
 tokio = "1.40.0"
-
-[[bin]]
-name = "main"
-path = "src/main.rs"
 
 [[bin]]
 name = "sender"
